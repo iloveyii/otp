@@ -2,8 +2,8 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Otp;
-use AppBundle\Form\EmailType;
+use AppBundle\Entity\Member;
+use AppBundle\Form\MemberType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,18 +11,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 use OTPHP\HOTP;
 
-class OtpController extends Controller
+class MemberController extends Controller
 {
     /**
-     * @Route("/otp/create", name="otp_create")
+     * @Route("/member/login", name="login")
+     * @param Request $request
+     * @return Response
      */
-    public function createAction(Request $request)
+    public function loginAction(Request $request)
     {
-        $otp = new Otp();
-        $form = $this->createForm(new EmailType(), $otp);
+        $member = new Member();
+        $form = $this->createForm(new MemberType(), $member);
         $form->handleRequest($request);
 
-        $hotp = new HOTP('"alice@google.com"');
+        $hotp = new HOTP();
         $otp = $hotp->at(0);
 
         if($form->isSubmitted() && $form->isValid()) {
@@ -31,10 +33,8 @@ class OtpController extends Controller
             return new Response('Email sent');
         }
 
-        // replace this example code with whatever you need
-        return $this->render('otp/create.html.twig', array(
-            'form' => $form->createView(),
-            'otp' => $otp,
-        ));
+        return $this->render('member/login.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }
