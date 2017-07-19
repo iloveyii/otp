@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+            <h3> List members </h3>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <br />
+        <div class="col-md-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Code</th>
+                        <th>Retry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>{{ member.email }}</td>
+                            <td>{{ member.code }}</td>
+                            <td>{{ member.retry }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+

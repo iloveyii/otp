@@ -170,4 +170,19 @@ class MemberController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/member/list", name="list")
+     * @return mixed
+     */
+    public function listAction()
+    {
+        $repository = $this->getDoctrine()->getRepository(Member::class);
+        $members = $repository->findAll();
+
+        return $this->render('member/list.html.twig', [
+            'members' => $members
+        ]);
+    }
+
+
 }
