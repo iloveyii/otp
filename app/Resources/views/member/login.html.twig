@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <hr />
-            <h3> Login information </h3>
+            <h3> Please sign in </h3>
             <hr />
         </div>
     </div>
@@ -14,12 +14,22 @@
         <br />
         <div class="col-md-12">
 
-            {{ form_start(form, {attr: {novalidate : 'novalidate'}}) }}
+            <form class="form-signin" action="{{ path('login') }}" method="POST">
+                <div class="form-group">
+                    <label for="_username" class="sr-only">Username</label>
+                    <input type="text" name="_username" id="_username" class="form-control" placeholder="Username" required autofocus>
+                </div>
 
-                {{ form_row(form.email) }}
+                <div class="form-group">
+                    <label for="_password" class="sr-only">Password</label>
+                    <input type="password" name="_password" id="_password" class="form-control" placeholder="Password" required>
+                </div>
 
-            {{ form_end(form) }}
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                </div>
 
+            </form>
         </div>
 
     </div>

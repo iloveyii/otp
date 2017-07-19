@@ -22,6 +22,12 @@ security:
             security: false
 
         main:
+            pattern: ^/
+            provider: in_memory
+            form_login:
+                login_path: login
+                check_path: login
+            logout: true
             anonymous: ~
             # activate different ways to authenticate
 

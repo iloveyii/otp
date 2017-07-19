@@ -21,11 +21,11 @@ class MemberController extends Controller
     const EXPIRED = 3;
 
     /**
-     * @Route("/member/login", name="login")
+     * @Route("/member/register", name="register")
      * @param Request $request
      * @return Response
      */
-    public function loginAction(Request $request)
+    public function register(Request $request)
     {
         $member = new Member();
         $form = $this->createForm(new MemberType(), $member);
@@ -53,7 +53,7 @@ class MemberController extends Controller
             return $this->redirectToRoute('verify');
         }
 
-        return $this->render('member/login.html.twig', [
+        return $this->render('member/register.html.twig', [
             'form' => $form->createView()
         ]);
     }
@@ -156,6 +156,18 @@ class MemberController extends Controller
 
         $this->get('mailer')
             ->send($message);
+    }
+
+    /**
+     * @Route("/member/login", name="login")
+     * @param Request $request
+     * @return mixed
+     */
+    public function loginAction(Request $request)
+    {
+        return $this->render('member/login.html.twig', [
+
+        ]);
     }
 
 }
