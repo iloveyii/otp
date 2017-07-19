@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+            <h3> Login information <span class="pull-right"><a href="{{ path('login') }}" class="btn btn-success">Login</a></span> </h3>
+            <hr />
+            {% if app.session.flashBag.has('info') %}
+                <div class="alert alert-info">
+                    {% for msg in app.session.flashBag.get('info') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if app.session.flashBag.has('error') %}
+                <div class="alert alert-danger">
+                    {% for msg in app.session.flashBag.get('error') %}
+                        {{ msg }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="row">
+        <br />
+        <div class="col-md-12">
+
+            {{ form_start(form, {attr: {novalidate : 'novalidate'}}) }}
+
+                {{ form_row(form.code) }}
+
+            {{ form_end(form) }}
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}

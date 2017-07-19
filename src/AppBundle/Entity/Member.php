@@ -14,6 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Member
 {
     /**
+     * @var const for retry threshold
+     */
+    const RETRY_THRESHOLD = 5;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -30,8 +35,6 @@ class Member
     private $email;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="code", type="string", length=6, nullable=true)
      */
     private $code;
@@ -124,6 +127,11 @@ class Member
     public function getRetry()
     {
         return $this->retry;
+    }
+
+    public function incrementRetry()
+    {
+        $this->retry++;
     }
 }
 

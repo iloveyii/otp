@@ -8,11 +8,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use OTPHP\HOTP;
 
 class MemberController extends Controller
 {
+    const VALID = 1;
+    const INVALID = 2;
+    const EXPIRED = 3;
+
     /**
      * @Route("/member/login", name="login")
      * @param Request $request
@@ -29,19 +36,100 @@ class MemberController extends Controller
 
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
-            $data = $form->getData();
-            $member->setEmail($data->getEmail());
             $member->setRetry(0);
             $member->setCode($otp);
             $em->persist($member);
             $em->flush();
 
-            return new Response('Email sent');
+            $this->get('session')->set('email', $member->getEmail());
+            $this->setFlash(
+                'info',
+                'A code has been sent to your email ! Please check your email and enter the code here.'
+            );
+            echo $this->get('session')->get('email');
+            return $this->redirectToRoute('verify');
         }
 
         return $this->render('member/login.html.twig', [
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/verify/code", name="verify")
+     * @param Request $request
+     * @return Response
+     */
+    public function verifyAction(Request $request)
+    {
+        $member = new Member();
+
+        $form = $this->createFormBuilder($member)
+                ->add('code', NumberType::class)
+                ->add('save', SubmitType::class, array('label' => 'Verify'))
+                ->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()) {
+            $data = $form->getData();
+            $code = $data->getCode();
+            $retry = self::INVALID;
+
+            if( ! empty($code)) {
+                $repository = $this->getDoctrine()->getRepository(Member::class);
+                $member = $repository->findOneBy(array('code'=>$code, 'email'=>$this->get('session')->get('email')));
+
+                if($member) {
+                    $retry = $member->getRetry() >= Member::RETRY_THRESHOLD ? self::EXPIRED : self::VALID;
+                    $em = $this->getDoctrine()->getManager();
+                    $member->incrementRetry();
+                    $em->persist($member);
+                    $em->flush();
+                }
+            }
+
+            switch ($retry) {
+                case self::VALID :
+                    $this->setFlash(
+                        'info',
+                        'Your code is valid !'
+                    );
+                    break;
+
+                case self::INVALID :
+                    $this->setFlash(
+                        'error',
+                        'Your code is not valid !'
+                    );
+                    break;
+
+                case self::EXPIRED :
+                    $this->setFlash(
+                        'error',
+                        'Your code is expired !'
+                    );
+                    break;
+            }
+        }
+
+        return $this->render('member/verifycode.html.twig', [
+            'form' => $form->createView(),
+            'loginLink' => $this->generateUrl('login')
+        ]);
+    }
+
+    private function  setFlash($type, $message)
+    {
+        $session = new Session();
+        $flashBag = $session->getFlashBag();
+        $flashBag->clear();
+        $flashBag->add(
+            $type,
+            $message
+        );
+
+    }
+
+
 }
