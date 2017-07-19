@@ -135,7 +135,7 @@ class MemberController extends Controller
 
     private function sendEmail($email, $code)
     {
-        $message = (new \Swift_Message('Hello Email'))
+        $message = (new \Swift_Message('One time password'))
             ->setFrom('ali.symfony@gmail.com')
             ->setTo($email)
             ->setBody(
@@ -159,14 +159,22 @@ class MemberController extends Controller
     }
 
     /**
-     * @Route("/member/login", name="login")
+     * @Route("/login", name="login")
      * @param Request $request
      * @return mixed
      */
     public function loginAction(Request $request)
     {
-        return $this->render('member/login.html.twig', [
+        $authenticationUtils = $this->get('security.authentication_utils');
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
 
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('member/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error'         => $error,
         ]);
     }
 
@@ -184,5 +192,19 @@ class MemberController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/logout", name="logout")
+     * @return mixed
+     */
+    public function logoutAction()
+    {
+        // throw new \RuntimeException('Cannot call directly');
+        $session = new Session();
+        $session->invalidate();
+
+        // $session = $this->get('session');
+        // return new Response('Logged out');
+        return $this->redirectToRoute('register');
+    }
 
 }

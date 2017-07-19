@@ -5,7 +5,9 @@
     <div class="row">
         <div class="col-md-12">
             <hr />
-            <h3> Please sign in </h3>
+            <h3> Please sign in
+            {% include 'member/controls.html.twig' %}
+            </h3>
             <hr />
         </div>
     </div>
@@ -13,17 +15,21 @@
     <div class="row">
         <br />
         <div class="col-md-12">
+            {% if error %}
+                <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-            <form class="form-signin" action="{{ path('login') }}" method="POST">
+            <form class="form-signin" action="{{ path('login') }}" method="post">
                 <div class="form-group">
-                    <label for="_username" class="sr-only">Username</label>
-                    <input type="text" name="_username" id="_username" class="form-control" placeholder="Username" required autofocus>
+                    <label for="username" class="sr-only">Username</label>
+                    <input type="text" name="_username" id="username" class="form-control" placeholder="Username" required autofocus value="{{ last_username }}">
                 </div>
 
                 <div class="form-group">
                     <label for="_password" class="sr-only">Password</label>
-                    <input type="password" name="_password" id="_password" class="form-control" placeholder="Password" required>
+                    <input type="password" name="_password" id="password" class="form-control" placeholder="Password" required>
                 </div>
+                <input type="hidden" name="_target_path" value="/member/list" />
 
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

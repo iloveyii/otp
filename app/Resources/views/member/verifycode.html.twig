@@ -7,8 +7,7 @@
             <hr />
                 <h3>
                     Login information
-                    <span class="pull-right"><a href="{{ path('register') }}" class="btn btn-default">Register</a></span>
-                    <span class="pull-right"><a href="{{ path('login') }}" class="btn btn-success">Login</a></span>
+                    {% include 'member/controls.html.twig' %}
                 </h3>
             <hr />
             {% if app.session.flashBag.has('info') %}

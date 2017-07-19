@@ -10,10 +10,10 @@ security:
     providers:
         in_memory:
             memory:
-              users:
-                admin:
-                  password: $2y$13$eXZQGHKJ7VPfjwsG/54LeOay0kWFZpRFfUBxqbfquoy7Hd9QjAIhO
-                  roles: 'ROLE_ADMIN'
+                users:
+                    admin:
+                        password: $2y$13$BL06cuJLZlNStWTt3eyJNOaqn.nq38SSBJM.I6EZgIcTAnpXRmYM2
+                        roles: ROLE_ADMIN
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -27,8 +27,9 @@ security:
             form_login:
                 login_path: login
                 check_path: login
-            logout: true
+            logout: false
             anonymous: ~
+            http_basic: ~
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
@@ -36,3 +37,6 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+    access_control:
+        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/member/list, roles: ROLE_ADMIN }
