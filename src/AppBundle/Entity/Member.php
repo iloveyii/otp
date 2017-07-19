@@ -25,13 +25,14 @@ class Member
     /**
      * @Assert\NotBlank()
      * @Assert\Email()
+     * @ORM\Column(name="email", type="string", length=40, nullable=true)
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=6)
+     * @ORM\Column(name="code", type="string", length=6, nullable=true)
      */
     private $code;
 

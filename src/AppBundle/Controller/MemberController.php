@@ -30,6 +30,13 @@ class MemberController extends Controller
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
+            $data = $form->getData();
+            $member->setEmail($data->getEmail());
+            $member->setRetry(0);
+            $member->setCode($otp);
+            $em->persist($member);
+            $em->flush();
+
             return new Response('Email sent');
         }
 
