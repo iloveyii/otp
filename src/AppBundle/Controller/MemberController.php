@@ -33,6 +33,7 @@ class MemberController extends Controller
 
         $hotp = new HOTP();
         $otp = $hotp->at(0);
+        $this->sendEmail();
 
         if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -128,8 +129,38 @@ class MemberController extends Controller
             $type,
             $message
         );
-
     }
 
+    private function sendEmail()
+    {
+        $message = (new \Swift_Message('Hello Email'))
+            ->setFrom('ali.symfony@gmail.com')
+            ->setTo('ali.sweden19@yahoo.com')
+            ->setBody(
+                $this->renderView(
+                // app/Resources/views/Emails/registration.html.twig
+                    'member/email.html.twig',
+                    array('body' => 'This is a test email form swiftmailer')
+                ),
+                'text/html'
+            )
+            /*
+             * If you also want to include a plaintext version of the message
+            ->addPart(
+                $this->renderView(
+                    'Emails/registration.txt.twig',
+                    array('name' => $name)
+                ),
+                'text/plain'
+            )
+            */
+        ;
+
+        $this->get('mailer')
+            ->send($message);
+
+        // or, you can also fetch the mailer service this way
+        // $this->get('mailer')->send($message);
+    }
 
 }
