@@ -12,3 +12,7 @@ _errors:
 
 _main:
     resource: routing.yml
+
+homepage:
+    pattern:  /
+    defaults:  { _controller: AppBundle:Member:register }
