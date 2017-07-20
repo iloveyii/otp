@@ -1,6 +1,7 @@
 <span class="pull-right"><a href="{{ path('register') }}" class="btn btn-default">Register</a> &nbsp;</span>
 
 {% if app.user %}
+    <span class="pull-right"><a href="{{ path('list') }}" class="btn btn-info">Members</a> &nbsp;</span>
     <span class="pull-right"><a href="{{ path('logout') }}" class="btn btn-success">Logout</a> &nbsp;</span>
 {% else %}
     <span class="pull-right"><a href="{{ path('login') }}" class="btn btn-success">Login</a> &nbsp; </span>

@@ -2,8 +2,6 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\AppBundle;
-use AppBundle\Entity\Otp;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +17,8 @@ class MemberType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class'  => 'AppBundle\Entity\Member'
+            'data_class'  => 'AppBundle\Entity\Member',
+            'csrf_protection' => false
         ]);
     }
 

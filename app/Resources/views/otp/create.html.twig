@@ -1,9 +1,0 @@
-{% extends 'base.html.twig' %}
-
-{% block body %}
-    <h1> Email: </h1>
-    {{ form_start(form, {attr: {novalidate : 'novalidate'}}) }}
-        {{ form_row(form.email) }}
-        {{ otp }}
-    {{ form_end(form) }}
-{% endblock %}
