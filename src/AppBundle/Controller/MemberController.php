@@ -41,6 +41,7 @@ class MemberController extends Controller
             $em->persist($member);
             $em->flush();
 
+            $this->startSession();
             $this->get('session')->set('email', $member->getEmail());
             $this->setFlash(
                 'info',
@@ -78,6 +79,7 @@ class MemberController extends Controller
             $data = $form->getData();
             $code = $data->getCode();
             $retryAttempt = self::INVALID; // let
+            $this->startSession();
 
             // if code is entered then check
             if( ! empty($code)) {
@@ -169,6 +171,7 @@ class MemberController extends Controller
      */
     public function logoutAction()
     {
+        $this->startSession();
         $session = new Session();
         $session->invalidate();
 
@@ -217,6 +220,15 @@ class MemberController extends Controller
 
         $this->get('mailer')
             ->send($message);
+    }
+
+    private function startSession()
+    {
+        try {
+            $this->get('session')->get('email');
+        } catch (SessionNotStartedException $e) {
+            $this->get('session')->start();
+        }
     }
 
 }
